@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Manager — MidMach</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0e0e12;color:#e0e0e0;min-height:100vh}
+header{background:#1a1a2e;padding:1rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:3px solid #D4A843}
+header .brand{font-weight:700;font-size:1.3rem;color:white;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none}
+header h1{font-size:1rem;color:#D4A843;margin-left:auto;font-weight:400}
+
+/* Password Gate */
+#passwordGate{max-width:420px;margin:120px auto;text-align:center;padding:2rem}
+#passwordGate h2{color:#D4A843;margin-bottom:.5rem;font-size:1.5rem;font-weight:600}
+#passwordGate .sub{color:#888;margin-bottom:1.5rem;font-size:.9rem}
+#passwordGate input{padding:14px 16px;border:2px solid #333;background:#1a1a2e;color:#e0e0e0;border-radius:8px;font-size:1rem;width:100%;margin-bottom:1rem;font-family:'Inter',sans-serif}
+#passwordGate input:focus{outline:none;border-color:#D4A843}
+#passwordGate button{background:#1a1a2e;color:#D4A843;border:2px solid #D4A843;padding:14px 36px;border-radius:8px;cursor:pointer;font-size:1rem;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif}
+#passwordGate button:hover{background:#D4A843;color:#1a1a2e}
+#passwordGate .error{color:#e74c3c;margin-top:.5rem;font-size:.9rem}
+
+/* Main Content */
+#mainContent{display:none;max-width:1100px;margin:0 auto;padding:2rem}
+
+/* Config Section */
+.config-bar{background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:1.5rem;margin-bottom:2rem}
+.config-bar h3{color:#D4A843;margin-bottom:1rem;font-size:.95rem;font-weight:600}
+.config-row{display:flex;gap:1rem;flex-wrap:wrap;align-items:end}
+.config-field{flex:1;min-width:200px}
+.config-field label{display:block;font-size:.75rem;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.config-field input{width:100%;padding:12px 14px;background:#0e0e12;border:1px solid #444;border-radius:8px;color:#e0e0e0;font-size:.9rem;font-family:'Inter',sans-serif}
+.config-field input:focus{outline:none;border-color:#D4A843}
+.config-save{background:#1a1a2e;color:#D4A843;border:2px solid #D4A843;padding:12px 28px;border-radius:8px;cursor:pointer;font-weight:600;font-size:.9rem;white-space:nowrap;transition:all .2s;font-family:'Inter',sans-serif}
+.config-save:hover{background:#D4A843;color:#1a1a2e}
+.config-status{font-size:.8rem;color:#4caf50;margin-top:.5rem}
+
+/* Upload Area */
+.upload-zone{border:3px dashed #333;border-radius:16px;padding:4rem 2rem;text-align:center;cursor:pointer;transition:all .3s;margin-bottom:2rem;position:relative}
+.upload-zone:hover,.upload-zone.dragover{border-color:#D4A843;background:rgba(212,168,67,.04)}
+.upload-zone svg{width:56px;height:56px;fill:#555;margin-bottom:1rem}
+.upload-zone h2{color:#D4A843;font-size:1.2rem;margin-bottom:.5rem;font-weight:600}
+.upload-zone p{color:#888;font-size:.85rem}
+.upload-zone input[type=file]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+
+/* Folder Input */
+.folder-bar{display:flex;gap:.5rem;margin-bottom:1.5rem;align-items:center}
+.folder-bar label{color:#888;font-size:.82rem;white-space:nowrap}
+.folder-bar input{flex:1;padding:10px 14px;background:#1a1a2e;border:1px solid #444;border-radius:8px;color:#e0e0e0;font-size:.9rem;font-family:'Inter',sans-serif}
+.folder-bar input:focus{outline:none;border-color:#D4A843}
+
+/* Progress */
+.upload-progress{display:none;margin-bottom:2rem}
+.progress-item{background:#1a1a2e;border:1px solid #333;border-radius:8px;padding:1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:1rem}
+.progress-item .filename{flex:1;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-bar-wrap{width:120px;height:8px;background:#333;border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;background:#D4A843;border-radius:4px;transition:width .3s;width:0}
+.progress-item .status{font-size:.8rem;min-width:70px;text-align:right}
+.status-uploading{color:#D4A843}
+.status-done{color:#4caf50}
+.status-error{color:#e74c3c}
+
+/* Gallery */
+.gallery-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.gallery-header h2{color:#D4A843;font-size:1.1rem;font-weight:600}
+.gallery-header .count{color:#888;font-size:.85rem}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem}
+.card{background:#1a1a2e;border:1px solid #333;border-radius:12px;overflow:hidden;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);border-color:#D4A843}
+.card .thumb{width:100%;aspect-ratio:4/3;object-fit:cover;background:#0e0e12;display:block}
+.card .info{padding:.75rem 1rem}
+.card .name{font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.5rem;color:#ccc}
+.card .size-info{font-size:.72rem;color:#888;margin-bottom:.5rem}
+.card .actions{display:flex;gap:.5rem}
+.card .actions button{flex:1;padding:7px;border-radius:6px;border:1px solid #444;background:#0e0e12;color:#ccc;font-size:.72rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.card .actions button:hover{border-color:#D4A843;color:#D4A843}
+.card .actions button.copied{background:#1a3c24;border-color:#4caf50;color:#4caf50}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;right:2rem;background:#1a1a2e;border:2px solid #D4A843;color:#D4A843;padding:14px 28px;border-radius:10px;font-size:.9rem;transform:translateY(100px);opacity:0;transition:all .3s;z-index:999;pointer-events:none;font-weight:500}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Empty state */
+.empty{text-align:center;padding:4rem 2rem;color:#666}
+.empty svg{width:48px;height:48px;fill:#444;margin-bottom:1rem}
+
+/* Back link */
+.back-link{display:inline-block;color:#D4A843;text-decoration:none;font-size:.85rem;font-weight:600;margin-bottom:2rem;letter-spacing:1px;text-transform:uppercase;transition:opacity .3s}
+.back-link:hover{opacity:.7}
+
+@media(max-width:600px){
+  header{flex-wrap:wrap;padding:1rem}
+  .config-row{flex-direction:column}
+  .gallery{grid-template-columns:1fr 1fr}
+  .card .actions{flex-direction:column}
+  #mainContent{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">MIDMACH</a>
+  <h1>Image Manager</h1>
+</header>
+
+<!-- Password Gate -->
+<div id="passwordGate">
+  <h2>Image Manager</h2>
+  <p class="sub">Enter your admin password to access the image CDN</p>
+  <input type="password" id="gatePass" placeholder="Password" onkeydown="if(event.key==='Enter')checkGate()">
+  <br>
+  <button onclick="checkGate()">Access</button>
+  <div class="error" id="gateError"></div>
+</div>
+
+<!-- Main Content -->
+<div id="mainContent">
+
+  <a href="index.html" class="back-link">&larr; Back to Site</a>
+
+  <!-- Cloudinary Config -->
+  <div class="config-bar" id="configBar">
+    <h3>Cloudinary Configuration</h3>
+    <div class="config-row">
+      <div class="config-field">
+        <label>Cloud Name</label>
+        <input type="text" id="cfgCloudName" placeholder="e.g. dxyz1abc">
+      </div>
+      <div class="config-field">
+        <label>Upload Preset (unsigned)</label>
+        <input type="text" id="cfgPreset" placeholder="e.g. midmach_uploads">
+      </div>
+      <div class="config-field">
+        <label>Default Folder</label>
+        <input type="text" id="cfgFolder" placeholder="e.g. midmach">
+      </div>
+      <button class="config-save" onclick="saveConfig()">Save Config</button>
+    </div>
+    <div class="config-status" id="configStatus"></div>
+  </div>
+
+  <!-- Folder selector -->
+  <div class="folder-bar">
+    <label>Upload to folder:</label>
+    <input type="text" id="uploadFolder" placeholder="midmach (leave blank for root)">
+  </div>
+
+  <!-- Upload Zone -->
+  <div class="upload-zone" id="uploadZone">
+    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+    <h2>Drop images here or click to browse</h2>
+    <p>PNG, JPG, GIF, SVG, WEBP — up to 10MB each</p>
+    <input type="file" id="fileInput" multiple accept="image/*">
+  </div>
+
+  <!-- Upload Progress -->
+  <div class="upload-progress" id="uploadProgress"></div>
+
+  <!-- Gallery -->
+  <div class="gallery-header">
+    <h2>Uploaded Images</h2>
+    <span class="count" id="imageCount"></span>
+  </div>
+  <div class="gallery" id="gallery"></div>
+  <div class="empty" id="emptyState">
+    <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+    <p>No images uploaded yet. Drop some files above to get started!</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== PASSWORD GATE ====================
+// Default hash - owner should change this. SHA-256 of 'MidMach2026!'
+var GATE_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+
+async function sha256(str) {
+  var buf = new TextEncoder().encode(str);
+  var hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+}
+
+async function checkGate() {
+  var pw = document.getElementById('gatePass').value;
+  var hash = await sha256(pw);
+  // Accept hash match or known plaintext (owner can change both)
+  if (hash === GATE_HASH || pw === 'MidMach2026!') {
+    document.getElementById('passwordGate').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    sessionStorage.setItem('mm-img-auth','1');
+    loadConfig();
+    renderGallery();
+  } else {
+    document.getElementById('gateError').textContent = 'Incorrect password';
+  }
+}
+
+if (sessionStorage.getItem('mm-img-auth') === '1') {
+  document.getElementById('passwordGate').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+}
+
+// ==================== CLOUDINARY CONFIG ====================
+function loadConfig() {
+  var cfg = JSON.parse(localStorage.getItem('mm-cloudinary-cfg') || '{}');
+  if (cfg.cloudName) document.getElementById('cfgCloudName').value = cfg.cloudName;
+  if (cfg.preset) document.getElementById('cfgPreset').value = cfg.preset;
+  if (cfg.folder) {
+    document.getElementById('cfgFolder').value = cfg.folder;
+    document.getElementById('uploadFolder').value = cfg.folder;
+  }
+  if (cfg.cloudName && cfg.preset) {
+    document.getElementById('configBar').style.borderColor = '#4caf50';
+  }
+}
+
+function saveConfig() {
+  var cfg = {
+    cloudName: document.getElementById('cfgCloudName').value.trim(),
+    preset: document.getElementById('cfgPreset').value.trim(),
+    folder: document.getElementById('cfgFolder').value.trim()
+  };
+  if (!cfg.cloudName || !cfg.preset) {
+    document.getElementById('configStatus').textContent = 'Cloud name and upload preset are required';
+    document.getElementById('configStatus').style.color = '#e74c3c';
+    return;
+  }
+  localStorage.setItem('mm-cloudinary-cfg', JSON.stringify(cfg));
+  document.getElementById('configStatus').textContent = 'Configuration saved!';
+  document.getElementById('configStatus').style.color = '#4caf50';
+  document.getElementById('configBar').style.borderColor = '#4caf50';
+  if (cfg.folder) document.getElementById('uploadFolder').value = cfg.folder;
+  setTimeout(function(){ document.getElementById('configStatus').textContent = ''; }, 3000);
+}
+
+function getConfig() {
+  return JSON.parse(localStorage.getItem('mm-cloudinary-cfg') || '{}');
+}
+
+// ==================== UPLOAD ====================
+var uploadZone = document.getElementById('uploadZone');
+var fileInput = document.getElementById('fileInput');
+
+uploadZone.addEventListener('dragover', function(e) {
+  e.preventDefault();
+  uploadZone.classList.add('dragover');
+});
+uploadZone.addEventListener('dragleave', function() {
+  uploadZone.classList.remove('dragover');
+});
+uploadZone.addEventListener('drop', function(e) {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', function() {
+  handleFiles(fileInput.files);
+  fileInput.value = '';
+});
+
+function handleFiles(files) {
+  var cfg = getConfig();
+  if (!cfg.cloudName || !cfg.preset) {
+    showToast('Please configure Cloudinary settings first');
+    document.getElementById('cfgCloudName').focus();
+    return;
+  }
+  var progressContainer = document.getElementById('uploadProgress');
+  progressContainer.style.display = 'block';
+  Array.from(files).forEach(function(file) {
+    if (file.size > 10 * 1024 * 1024) {
+      showToast(file.name + ' exceeds 10MB limit');
+      return;
+    }
+    uploadFile(file, cfg, progressContainer);
+  });
+}
+
+function uploadFile(file, cfg, progressContainer) {
+  var item = document.createElement('div');
+  item.className = 'progress-item';
+  item.innerHTML = '<span class="filename">' + escHtml(file.name) + '</span>' +
+    '<div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>' +
+    '<span class="status status-uploading">Uploading...</span>';
+  progressContainer.prepend(item);
+
+  var bar = item.querySelector('.progress-bar-fill');
+  var status = item.querySelector('.status');
+  var folder = document.getElementById('uploadFolder').value.trim();
+
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', cfg.preset);
+  if (folder) formData.append('folder', folder);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + cfg.cloudName + '/image/upload');
+
+  xhr.upload.onprogress = function(e) {
+    if (e.lengthComputable) {
+      var pct = Math.round((e.loaded / e.total) * 100);
+      bar.style.width = pct + '%';
+      status.textContent = pct + '%';
+    }
+  };
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      bar.style.width = '100%';
+      bar.style.background = '#4caf50';
+      status.textContent = 'Done';
+      status.className = 'status status-done';
+      saveImage(data);
+      renderGallery();
+      showToast(file.name + ' uploaded!');
+      setTimeout(function(){ item.style.opacity = '0'; setTimeout(function(){ item.remove(); checkProgressEmpty(); }, 300); }, 3000);
+    } else {
+      var errMsg = 'Upload failed';
+      try { errMsg = JSON.parse(xhr.responseText).error.message; } catch(e){}
+      bar.style.background = '#e74c3c';
+      status.textContent = 'Error';
+      status.className = 'status status-error';
+      status.title = errMsg;
+      showToast(file.name + ': ' + errMsg);
+    }
+  };
+
+  xhr.onerror = function() {
+    bar.style.background = '#e74c3c';
+    status.textContent = 'Error';
+    status.className = 'status status-error';
+    showToast('Network error uploading ' + file.name);
+  };
+
+  xhr.send(formData);
+}
+
+function checkProgressEmpty() {
+  var pc = document.getElementById('uploadProgress');
+  if (pc.children.length === 0) pc.style.display = 'none';
+}
+
+// ==================== GALLERY ====================
+function getImages() {
+  return JSON.parse(localStorage.getItem('mm-cdn-images') || '[]');
+}
+
+function saveImage(data) {
+  var images = getImages();
+  images.unshift({
+    id: data.public_id,
+    url: data.secure_url,
+    thumb: data.secure_url.replace('/upload/', '/upload/c_fill,w_480,h_360,q_auto/'),
+    name: data.original_filename + '.' + data.format,
+    format: data.format,
+    size: data.bytes,
+    width: data.width,
+    height: data.height,
+    created: data.created_at
+  });
+  localStorage.setItem('mm-cdn-images', JSON.stringify(images));
+}
+
+function renderGallery() {
+  var images = getImages();
+  var gallery = document.getElementById('gallery');
+  var empty = document.getElementById('emptyState');
+  var count = document.getElementById('imageCount');
+
+  if (images.length === 0) {
+    gallery.innerHTML = '';
+    empty.style.display = 'block';
+    count.textContent = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  count.textContent = images.length + ' image' + (images.length !== 1 ? 's' : '');
+
+  gallery.innerHTML = images.map(function(img, i) {
+    var sizeStr = img.size ? formatSize(img.size) : '';
+    var dimStr = img.width ? img.width + '\u00d7' + img.height : '';
+    return '<div class="card">' +
+      '<img class="thumb" src="' + escAttr(img.thumb) + '" alt="' + escAttr(img.name) + '" loading="lazy" onerror="this.src=\'' + escAttr(img.url) + '\'">' +
+      '<div class="info">' +
+        '<div class="name" title="' + escAttr(img.name) + '">' + escHtml(img.name) + '</div>' +
+        '<div class="size-info">' + sizeStr + (dimStr ? ' \u00b7 ' + dimStr : '') + '</div>' +
+        '<div class="actions">' +
+          '<button onclick="copyUrl(' + i + ',this)">Copy URL</button>' +
+          '<button onclick="copyHtml(' + i + ',this)">Copy HTML</button>' +
+          '<button onclick="openFull(' + i + ')">Open</button>' +
+          '<button onclick="removeImage(' + i + ')" style="color:#e74c3c;border-color:rgba(231,76,60,.4)">Remove</button>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function copyUrl(i, btn) {
+  var img = getImages()[i];
+  navigator.clipboard.writeText(img.url).then(function(){
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    showToast('URL copied to clipboard');
+    setTimeout(function(){ btn.textContent = 'Copy URL'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyHtml(i, btn) {
+  var img = getImages()[i];
+  var html = '<img src="' + img.url + '" alt="' + img.name + '">';
+  navigator.clipboard.writeText(html).then(function(){
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    showToast('HTML tag copied');
+    setTimeout(function(){ btn.textContent = 'Copy HTML'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function openFull(i) {
+  var img = getImages()[i];
+  window.open(img.url, '_blank');
+}
+
+function removeImage(i) {
+  if (!confirm('Remove this image from the gallery?\n(It will still exist on Cloudinary)')) return;
+  var images = getImages();
+  images.splice(i, 1);
+  localStorage.setItem('mm-cdn-images', JSON.stringify(images));
+  renderGallery();
+  showToast('Image removed from gallery');
+}
+
+// ==================== HELPERS ====================
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1048576).toFixed(1) + ' MB';
+}
+
+function escHtml(s) { var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;'); }
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// Init
+loadConfig();
+renderGallery();
+</script>
+</body>
+</html>

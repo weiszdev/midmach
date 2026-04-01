@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Configurator — MidMach</title>
+    <meta name="description" content="Design your custom industrial access platform configuration. Drag and drop platforms, stairs, handrails, and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #2d2d2d; background: #FAFAF9; overflow-x: hidden; line-height: 1.6; }
+
+        :root {
+            --mm-navy: #1a1a2e; --mm-navy-light: #2a2a42; --mm-orange: #E8511A; --mm-orange-dark: #c7410f;
+            --mm-gold: #D4A843; --mm-gold-light: #e8c96e; --mm-charcoal: #2d2d2d; --mm-gray: #6b6b6b;
+            --mm-cream: #F8F6F1; --mm-white: #FAFAF9;
+            --mm-shadow: 0 4px 20px rgba(0,0,0,0.08); --mm-shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --mm-radius: 8px; --mm-radius-lg: 16px;
+        }
+        h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.15; }
+
+        /* NAV */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 12px 48px; display: flex; justify-content: space-between; align-items: center; background: rgba(26,26,46,0.97); backdrop-filter: blur(12px); box-shadow: 0 2px 30px rgba(0,0,0,0.2); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.6rem; color: white; letter-spacing: 0.2em; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; position: relative; padding-bottom: 4px; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--mm-gold); transition: width 0.3s ease; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-content { display: none; position: absolute; top: 100%; left: -12px; background: var(--mm-navy); border-radius: var(--mm-radius); padding: 12px 0; min-width: 220px; box-shadow: var(--mm-shadow-lg); margin-top: 12px; }
+        .nav-dropdown:hover .nav-dropdown-content { display: block; }
+        .nav-dropdown-content a { display: block; padding: 10px 24px; font-size: 0.8rem; letter-spacing: 1px; white-space: nowrap; }
+        .nav-dropdown-content a::after { display: none; }
+        .nav-dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--mm-gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; padding: 8px; }
+        .hamburger span { width: 26px; height: 2px; background: white; transition: all 0.3s ease; display: block; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--mm-navy); z-index: 999; padding: 100px 40px 40px; flex-direction: column; overflow-y: auto; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .mobile-menu .sub-link { padding-left: 24px; font-size: 0.95rem; color: rgba(255,255,255,0.7); }
+
+        /* HERO */
+        .page-hero { background: var(--mm-navy); padding: 130px 48px 48px; text-align: center; }
+        .page-hero h1 { color: white; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 8px; }
+        .page-hero p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+        .page-hero .accent { margin: 12px auto 16px; width: 60px; height: 3px; background: var(--mm-gold); }
+
+        /* CONFIGURATOR LAYOUT */
+        .config-app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            min-height: 70vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: white;
+            border-radius: var(--mm-radius-lg);
+            box-shadow: var(--mm-shadow);
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+        .sidebar h3 {
+            font-size: 1.1rem;
+            color: var(--mm-navy);
+            margin-bottom: 16px;
+        }
+        .sidebar-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--mm-gray);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 0 10px;
+        }
+        .component-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: var(--mm-radius);
+            background: var(--mm-white);
+            cursor: grab;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--mm-charcoal);
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+        .component-btn:hover {
+            border-color: var(--mm-orange);
+            background: rgba(232,81,26,0.04);
+        }
+        .component-btn:active { cursor: grabbing; }
+        .comp-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .comp-icon.platform { background: rgba(26,26,46,0.1); color: var(--mm-navy); }
+        .comp-icon.stairs { background: rgba(232,81,26,0.1); color: var(--mm-orange); }
+        .comp-icon.handrail { background: rgba(212,168,67,0.1); color: var(--mm-gold); }
+        .comp-icon.ladder { background: rgba(75,150,75,0.1); color: #4b964b; }
+        .comp-icon.crossover { background: rgba(100,100,180,0.1); color: #6464b4; }
+        .comp-icon.gate { background: rgba(180,100,100,0.1); color: #b46464; }
+
+        .sidebar-actions {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-actions button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--mm-radius);
+            background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--mm-charcoal);
+        }
+        .sidebar-actions button:hover { border-color: var(--mm-navy); background: var(--mm-cream); }
+        .sidebar-actions button.danger { color: #c0392b; }
+        .sidebar-actions button.danger:hover { border-color: #c0392b; background: #fdf2f2; }
+
+        /* CANVAS AREA */
+        .canvas-area {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .canvas-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px 20px;
+            border-radius: var(--mm-radius);
+            box-shadow: var(--mm-shadow-sm, 0 2px 8px rgba(0,0,0,0.06));
+        }
+        .canvas-toolbar .info { font-size: 0.85rem; color: var(--mm-gray); }
+        .canvas-toolbar .info strong { color: var(--mm-navy); }
+        .toolbar-btns { display: flex; gap: 8px; }
+        .toolbar-btns button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--mm-radius);
+            background: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toolbar-btns button:hover { border-color: var(--mm-navy); }
+        .toolbar-btns button.delete-btn { color: #c0392b; }
+        .toolbar-btns button.delete-btn:hover { border-color: #c0392b; }
+
+        .canvas-wrapper {
+            background: white;
+            border-radius: var(--mm-radius-lg);
+            box-shadow: var(--mm-shadow);
+            overflow: hidden;
+            border: 2px solid #e8e8e8;
+        }
+        #configCanvas { display: block; }
+
+        /* BOM TABLE */
+        .bom-section {
+            background: white;
+            border-radius: var(--mm-radius-lg);
+            box-shadow: var(--mm-shadow);
+            padding: 28px;
+        }
+        .bom-section h3 {
+            font-size: 1.3rem;
+            color: var(--mm-navy);
+            margin-bottom: 4px;
+        }
+        .bom-section .sub { color: var(--mm-gray); font-size: 0.88rem; margin-bottom: 20px; }
+        .bom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .bom-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--mm-cream);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--mm-gray);
+            border-bottom: 2px solid #e8e8e8;
+        }
+        .bom-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--mm-charcoal);
+        }
+        .bom-table tr:last-child td { border-bottom: none; }
+        .bom-empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--mm-gray);
+            font-size: 0.95rem;
+        }
+
+        /* QUOTE FORM */
+        .quote-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; font-size: 0.9rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: var(--mm-radius); text-decoration: none; cursor: pointer; border: none; transition: all 0.3s ease; }
+        .btn-primary { background: var(--mm-orange); color: white; }
+        .btn-primary:hover { background: var(--mm-orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,81,26,0.3); }
+        .btn-outline-dark { background: transparent; color: var(--mm-navy); border: 2px solid var(--mm-navy); padding: 12px 24px; }
+        .btn-outline-dark:hover { background: var(--mm-navy); color: white; }
+
+        /* QUOTE MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: var(--mm-radius-lg);
+            padding: 40px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: var(--mm-shadow-lg);
+        }
+        .modal h2 { font-size: 1.6rem; color: var(--mm-navy); margin-bottom: 8px; }
+        .modal .sub { color: var(--mm-gray); font-size: 0.92rem; margin-bottom: 24px; }
+        .modal .form-group { margin-bottom: 14px; }
+        .modal label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--mm-navy); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+        .modal input, .modal textarea {
+            width: 100%; padding: 12px 14px; border: 2px solid #e5e5e5; border-radius: var(--mm-radius);
+            font-family: 'Inter', sans-serif; font-size: 0.92rem; color: var(--mm-charcoal); transition: border-color 0.3s;
+        }
+        .modal input:focus, .modal textarea:focus { outline: none; border-color: var(--mm-orange); }
+        .modal textarea { min-height: 80px; resize: vertical; }
+        .modal-btns { display: flex; gap: 12px; margin-top: 20px; }
+        .modal-btns .btn { flex: 1; justify-content: center; }
+        .btn-cancel { background: #f5f5f5; color: var(--mm-charcoal); border: none; }
+        .btn-cancel:hover { background: #eee; }
+        .modal-success { display: none; text-align: center; padding: 20px 0; }
+        .modal-success h3 { color: var(--mm-navy); margin-bottom: 8px; }
+        .modal-success p { color: var(--mm-gray); }
+
+        /* FOOTER */
+        footer { background: var(--mm-navy); color: rgba(255,255,255,0.7); padding: 60px 48px 32px; }
+        .footer-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .footer-brand p { margin-top: 16px; font-size: 0.92rem; line-height: 1.7; max-width: 300px; }
+        .footer-col h4 { color: white; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; padding: 6px 0; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--mm-gold); }
+        .footer-bottom { max-width: 1280px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+        .footer-bottom a { color: var(--mm-gold); text-decoration: none; }
+
+        @media (max-width: 1024px) {
+            nav { padding: 12px 24px; }
+            .config-app { grid-template-columns: 1fr; padding: 24px 16px; }
+            .sidebar { position: static; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+            .sidebar h3, .sidebar-label { grid-column: 1 / -1; }
+            .sidebar-actions { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .page-hero { padding: 110px 24px 36px; }
+            .quote-actions { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="index.html" class="nav-brand"><span class="nav-wordmark">MIDMACH</span></a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-dropdown">
+            <a href="services.html">Services</a>
+            <div class="nav-dropdown-content">
+                <a href="services-cnc.html">CNC Machining</a>
+                <a href="services-laser.html">Laser Cutting</a>
+                <a href="services-welding.html">Robotic Welding</a>
+                <a href="services-fabrication.html">Metal Fabrication</a>
+            </div>
+        </li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="configurator.html">Configurator</a></li>
+        <li><a href="quality.html">Quality</a></li>
+        <li><a href="employment.html">Careers</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="contact.html" class="btn btn-primary" style="padding:10px 24px;font-size:0.8rem;">Get a Quote</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="about.html">About Us</a><a href="services.html">Services</a>
+    <a href="services-cnc.html" class="sub-link">CNC Machining</a><a href="services-laser.html" class="sub-link">Laser Cutting</a>
+    <a href="services-welding.html" class="sub-link">Robotic Welding</a><a href="services-fabrication.html" class="sub-link">Metal Fabrication</a>
+    <a href="products.html">Products</a><a href="configurator.html">Configurator</a><a href="quality.html">Quality</a>
+    <a href="employment.html">Careers</a><a href="merch.html">Merch</a><a href="contact.html">Contact</a>
+</div>
+
+<!-- HERO -->
+<div class="page-hero">
+    <h1>Platform Configurator</h1>
+    <div class="accent" style="margin:12px auto 16px;width:60px;height:3px;background:var(--mm-gold);"></div>
+    <p>Drag and drop industrial access components to design your layout. Generate a bill of materials and request a quote instantly.</p>
+</div>
+
+<!-- CONFIGURATOR -->
+<div class="config-app">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>Components</h3>
+        <p class="sidebar-label">Platforms</p>
+        <button class="component-btn" data-type="platform-4x4" data-w="4" data-h="4" data-label="4'×4' Platform" data-color="#1a1a2e">
+            <span class="comp-icon platform">&#9632;</span> 4'×4' Platform
+        </button>
+        <button class="component-btn" data-type="platform-4x8" data-w="8" data-h="4" data-label="4'×8' Platform" data-color="#1a1a2e">
+            <span class="comp-icon platform">&#9644;</span> 4'×8' Platform
+        </button>
+        <button class="component-btn" data-type="platform-6x6" data-w="6" data-h="6" data-label="6'×6' Platform" data-color="#2a2a42">
+            <span class="comp-icon platform">&#9632;</span> 6'×6' Platform
+        </button>
+
+        <p class="sidebar-label">Access</p>
+        <button class="component-btn" data-type="stairs-straight" data-w="3" data-h="6" data-label="Straight Stairs" data-color="#E8511A">
+            <span class="comp-icon stairs">&#9650;</span> Straight Stairs
+        </button>
+        <button class="component-btn" data-type="stairs-spiral" data-w="4" data-h="4" data-label="Spiral Stairs" data-color="#c7410f">
+            <span class="comp-icon stairs">&#9684;</span> Spiral Stairs
+        </button>
+        <button class="component-btn" data-type="ladder" data-w="2" data-h="5" data-label="Access Ladder" data-color="#4b964b">
+            <span class="comp-icon ladder">&#9649;</span> Access Ladder
+        </button>
+
+        <p class="sidebar-label">Safety</p>
+        <button class="component-btn" data-type="handrail" data-w="6" data-h="1" data-label="Handrail Section" data-color="#D4A843">
+            <span class="comp-icon handrail">&#9552;</span> Handrail Section
+        </button>
+        <button class="component-btn" data-type="crossover" data-w="8" data-h="3" data-label="Crossover Bridge" data-color="#6464b4">
+            <span class="comp-icon crossover">&#9644;</span> Crossover Bridge
+        </button>
+        <button class="component-btn" data-type="gate" data-w="2" data-h="2" data-label="Safety Gate" data-color="#b46464">
+            <span class="comp-icon gate">&#9635;</span> Safety Gate
+        </button>
+
+        <div class="sidebar-actions">
+            <button onclick="saveConfig()">Save Layout</button>
+            <button onclick="loadConfig()">Load Layout</button>
+            <button class="danger" onclick="clearCanvas()">Clear All</button>
+        </div>
+    </div>
+
+    <!-- CANVAS + BOM -->
+    <div class="canvas-area">
+        <div class="canvas-toolbar">
+            <div class="info">Components: <strong id="compCount">0</strong> &nbsp;|&nbsp; Grid: 1 cell = 1 ft</div>
+            <div class="toolbar-btns">
+                <button onclick="zoomIn()">Zoom +</button>
+                <button onclick="zoomOut()">Zoom &minus;</button>
+                <button onclick="resetZoom()">Reset</button>
+                <button class="delete-btn" onclick="deleteSelected()">Delete Selected</button>
+            </div>
+        </div>
+
+        <div class="canvas-wrapper">
+            <div id="configCanvas"></div>
+        </div>
+
+        <!-- BOM -->
+        <div class="bom-section">
+            <h3>Bill of Materials</h3>
+            <p class="sub">Auto-generated from your configuration layout</p>
+            <div id="bomContent">
+                <div class="bom-empty">Add components to the canvas to generate a BOM</div>
+            </div>
+            <div class="quote-actions">
+                <button class="btn btn-outline-dark" onclick="exportBOM()">Export BOM (CSV)</button>
+                <button class="btn btn-primary" onclick="openQuoteModal()">Request Quote &rarr;</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- QUOTE MODAL -->
+<div class="modal-overlay" id="quoteModal">
+    <div class="modal">
+        <div id="quoteFormWrap">
+            <h2>Request a Quote</h2>
+            <p class="sub">We'll review your configuration and respond within 1 business day.</p>
+            <form id="quoteForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" name="company">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="phone">
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea name="notes" placeholder="Any special requirements, materials, coatings..."></textarea>
+                </div>
+                <input type="hidden" name="bom" id="bomHidden">
+                <input type="hidden" name="config" id="configHidden">
+                <div class="modal-btns">
+                    <button type="button" class="btn btn-cancel" onclick="closeQuoteModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Quote</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-success" id="quoteSuccess">
+            <h3>Quote Submitted!</h3>
+            <p>We'll review your configuration and be in touch within 1 business day.</p>
+            <button class="btn btn-primary" style="margin-top:20px;" onclick="closeQuoteModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <span class="nav-wordmark" style="font-size:1.4rem;">MIDMACH</span>
+            <p>Precision manufacturing for defense, aerospace, and industrial applications.</p>
+        </div>
+        <div class="footer-col"><h4>Services</h4><a href="services-cnc.html">CNC Machining</a><a href="services-laser.html">Laser Cutting</a><a href="services-welding.html">Robotic Welding</a><a href="services-fabrication.html">Metal Fabrication</a></div>
+        <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="quality.html">Quality</a><a href="employment.html">Careers</a><a href="contact.html">Contact</a></div>
+        <div class="footer-col"><h4>More</h4><a href="products.html">Products</a><a href="configurator.html">Configurator</a><a href="merch.html">Merchandise</a></div>
+    </div>
+    <div class="footer-bottom"><span>&copy; 2026 MidMach. All rights reserved.</span><span>Formerly Midwestern Machine</span></div>
+</footer>
+
+<script>
+// ===== MOBILE MENU =====
+function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+    document.querySelector('.hamburger').classList.toggle('active');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+}
+
+// ===== KONVA SETUP =====
+const GRID = 24; // pixels per foot
+const CANVAS_W = 960;
+const CANVAS_H = 600;
+let placedComponents = [];
+let selectedNode = null;
+
+const stage = new Konva.Stage({
+    container: 'configCanvas',
+    width: CANVAS_W,
+    height: CANVAS_H,
+    draggable: true
+});
+
+const gridLayer = new Konva.Layer();
+const compLayer = new Konva.Layer();
+stage.add(gridLayer);
+stage.add(compLayer);
+
+// Draw grid
+function drawGrid() {
+    gridLayer.destroyChildren();
+    // Background
+    gridLayer.add(new Konva.Rect({ x: 0, y: 0, width: CANVAS_W, height: CANVAS_H, fill: '#fafafa' }));
+    // Grid lines
+    for (let x = 0; x <= CANVAS_W; x += GRID) {
+        gridLayer.add(new Konva.Line({ points: [x, 0, x, CANVAS_H], stroke: '#e8e8e8', strokeWidth: 1 }));
+    }
+    for (let y = 0; y <= CANVAS_H; y += GRID) {
+        gridLayer.add(new Konva.Line({ points: [0, y, CANVAS_W, y], stroke: '#e8e8e8', strokeWidth: 1 }));
+    }
+    // Major grid (every 4ft)
+    for (let x = 0; x <= CANVAS_W; x += GRID * 4) {
+        gridLayer.add(new Konva.Line({ points: [x, 0, x, CANVAS_H], stroke: '#d0d0d0', strokeWidth: 1 }));
+    }
+    for (let y = 0; y <= CANVAS_H; y += GRID * 4) {
+        gridLayer.add(new Konva.Line({ points: [0, y, CANVAS_W, y], stroke: '#d0d0d0', strokeWidth: 1 }));
+    }
+    gridLayer.draw();
+}
+drawGrid();
+
+// ===== ADD COMPONENT =====
+function addComponent(type, w, h, label, color, x, y) {
+    const pw = w * GRID;
+    const ph = h * GRID;
+    const cx = x !== undefined ? x : Math.round((CANVAS_W / 2 - pw / 2) / GRID) * GRID;
+    const cy = y !== undefined ? y : Math.round((CANVAS_H / 2 - ph / 2) / GRID) * GRID;
+
+    const group = new Konva.Group({
+        x: cx, y: cy,
+        draggable: true,
+        name: 'component'
+    });
+
+    const rect = new Konva.Rect({
+        width: pw, height: ph,
+        fill: color,
+        opacity: 0.85,
+        cornerRadius: 4,
+        stroke: '#333',
+        strokeWidth: 1.5
+    });
+
+    const text = new Konva.Text({
+        width: pw, height: ph,
+        text: label,
+        fontSize: Math.min(12, pw / label.length * 1.5),
+        fontFamily: 'Inter, sans-serif',
+        fontStyle: 'bold',
+        fill: 'white',
+        align: 'center',
+        verticalAlign: 'middle',
+        padding: 4
+    });
+
+    group.add(rect);
+    group.add(text);
+
+    // Snap to grid on drag
+    group.on('dragend', function() {
+        this.x(Math.round(this.x() / GRID) * GRID);
+        this.y(Math.round(this.y() / GRID) * GRID);
+        compLayer.draw();
+        updateBOM();
+    });
+
+    // Selection
+    group.on('click tap', function() {
+        selectNode(this);
+    });
+
+    compLayer.add(group);
+    compLayer.draw();
+
+    const comp = { id: Date.now() + Math.random(), type, w, h, label, color, node: group };
+    placedComponents.push(comp);
+    group._compRef = comp;
+
+    updateBOM();
+    selectNode(group);
+    return comp;
+}
+
+function selectNode(node) {
+    // Deselect previous
+    if (selectedNode) {
+        const r = selectedNode.findOne('Rect');
+        if (r) { r.stroke('#333'); r.strokeWidth(1.5); }
+    }
+    selectedNode = node;
+    if (node) {
+        const r = node.findOne('Rect');
+        if (r) { r.stroke('#E8511A'); r.strokeWidth(3); }
+    }
+    compLayer.draw();
+}
+
+// Click on empty space to deselect
+stage.on('click tap', function(e) {
+    if (e.target === stage || e.target.parent === gridLayer) {
+        selectNode(null);
+    }
+});
+
+// ===== SIDEBAR CLICK TO ADD =====
+document.querySelectorAll('.component-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const type = this.dataset.type;
+        const w = parseInt(this.dataset.w);
+        const h = parseInt(this.dataset.h);
+        const label = this.dataset.label;
+        const color = this.dataset.color;
+        addComponent(type, w, h, label, color);
+    });
+});
+
+// ===== DELETE =====
+function deleteSelected() {
+    if (!selectedNode) return;
+    const comp = selectedNode._compRef;
+    placedComponents = placedComponents.filter(c => c !== comp);
+    selectedNode.destroy();
+    selectedNode = null;
+    compLayer.draw();
+    updateBOM();
+}
+
+// Keyboard delete
+document.addEventListener('keydown', function(e) {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNode && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        deleteSelected();
+    }
+});
+
+// ===== ZOOM =====
+let currentScale = 1;
+function zoomIn() {
+    currentScale = Math.min(currentScale * 1.2, 3);
+    stage.scale({ x: currentScale, y: currentScale });
+    stage.draw();
+}
+function zoomOut() {
+    currentScale = Math.max(currentScale / 1.2, 0.4);
+    stage.scale({ x: currentScale, y: currentScale });
+    stage.draw();
+}
+function resetZoom() {
+    currentScale = 1;
+    stage.scale({ x: 1, y: 1 });
+    stage.position({ x: 0, y: 0 });
+    stage.draw();
+}
+
+// Mouse wheel zoom
+stage.on('wheel', function(e) {
+    e.evt.preventDefault();
+    const direction = e.evt.deltaY > 0 ? -1 : 1;
+    if (direction > 0) zoomIn(); else zoomOut();
+});
+
+// ===== BOM =====
+function updateBOM() {
+    const counts = {};
+    placedComponents.forEach(c => {
+        const key = c.type;
+        if (!counts[key]) counts[key] = { label: c.label, type: c.type, w: c.w, h: c.h, qty: 0 };
+        counts[key].qty++;
+    });
+
+    document.getElementById('compCount').textContent = placedComponents.length;
+
+    const items = Object.values(counts);
+    if (items.length === 0) {
+        document.getElementById('bomContent').innerHTML = '<div class="bom-empty">Add components to the canvas to generate a BOM</div>';
+        return;
+    }
+
+    let html = '<table class="bom-table"><thead><tr><th>Item</th><th>Type</th><th>Size (ft)</th><th>Qty</th></tr></thead><tbody>';
+    items.forEach((item, i) => {
+        html += '<tr><td>' + (i + 1) + '</td><td>' + item.label + '</td><td>' + item.w + '\' × ' + item.h + '\'</td><td>' + item.qty + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('bomContent').innerHTML = html;
+}
+
+// ===== EXPORT BOM =====
+function exportBOM() {
+    const counts = {};
+    placedComponents.forEach(c => {
+        if (!counts[c.type]) counts[c.type] = { label: c.label, w: c.w, h: c.h, qty: 0 };
+        counts[c.type].qty++;
+    });
+    const items = Object.values(counts);
+    if (items.length === 0) { alert('No components to export.'); return; }
+
+    let csv = 'Item,Type,Width (ft),Height (ft),Quantity\n';
+    items.forEach((item, i) => {
+        csv += (i + 1) + ',"' + item.label + '",' + item.w + ',' + item.h + ',' + item.qty + '\n';
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'midmach-bom-' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.click();
+}
+
+// ===== SAVE/LOAD =====
+function saveConfig() {
+    const data = placedComponents.map(c => ({
+        type: c.type, w: c.w, h: c.h, label: c.label, color: c.color,
+        x: c.node.x(), y: c.node.y()
+    }));
+    localStorage.setItem('mm-config', JSON.stringify(data));
+    alert('Configuration saved!');
+}
+
+function loadConfig() {
+    const raw = localStorage.getItem('mm-config');
+    if (!raw) { alert('No saved configuration found.'); return; }
+    clearCanvas();
+    const data = JSON.parse(raw);
+    data.forEach(d => addComponent(d.type, d.w, d.h, d.label, d.color, d.x, d.y));
+}
+
+function clearCanvas() {
+    if (placedComponents.length > 0 && !confirm('Clear all components?')) return;
+    placedComponents.forEach(c => c.node.destroy());
+    placedComponents = [];
+    selectedNode = null;
+    compLayer.draw();
+    updateBOM();
+}
+
+// ===== QUOTE MODAL =====
+function openQuoteModal() {
+    if (placedComponents.length === 0) { alert('Add components to your layout before requesting a quote.'); return; }
+    // Populate hidden fields
+    const counts = {};
+    placedComponents.forEach(c => {
+        if (!counts[c.type]) counts[c.type] = { label: c.label, w: c.w, h: c.h, qty: 0 };
+        counts[c.type].qty++;
+    });
+    const bomText = Object.values(counts).map(i => i.qty + 'x ' + i.label + ' (' + i.w + '\'×' + i.h + '\')').join(', ');
+    document.getElementById('bomHidden').value = bomText;
+
+    const configData = placedComponents.map(c => ({
+        type: c.type, label: c.label, x: c.node.x(), y: c.node.y(), w: c.w, h: c.h
+    }));
+    document.getElementById('configHidden').value = JSON.stringify(configData);
+
+    document.getElementById('quoteModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeQuoteModal() {
+    document.getElementById('quoteModal').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('quoteFormWrap').style.display = '';
+    document.getElementById('quoteSuccess').style.display = 'none';
+}
+
+document.getElementById('quoteForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const data = new FormData(form);
+    fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+    .then(r => {
+        document.getElementById('quoteFormWrap').style.display = 'none';
+        document.getElementById('quoteSuccess').style.display = 'block';
+    }).catch(() => {
+        document.getElementById('quoteFormWrap').style.display = 'none';
+        document.getElementById('quoteSuccess').style.display = 'block';
+    });
+});
+
+// Close modal on overlay click
+document.getElementById('quoteModal').addEventListener('click', function(e) {
+    if (e.target === this) closeQuoteModal();
+});
+</script>
+</body>
+</html>

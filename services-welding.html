@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotic Welding — MidMach Precision Manufacturing</title>
+    <meta name="description" content="MidMach robotic welding services feature CLOOS automated MIG and TIG welding cells for consistent, high-quality weldments at production volumes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #2d2d2d; background: #FAFAF9; overflow-x: hidden; line-height: 1.6; }
+
+        :root {
+            --mm-navy: #1a1a2e; --mm-navy-light: #2a2a42; --mm-orange: #E8511A; --mm-orange-dark: #c7410f;
+            --mm-gold: #D4A843; --mm-gold-light: #e8c96e; --mm-charcoal: #2d2d2d; --mm-gray: #6b6b6b;
+            --mm-gray-light: #999; --mm-cream: #F8F6F1; --mm-white: #FAFAF9;
+            --mm-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --mm-shadow: 0 4px 20px rgba(0,0,0,0.08); --mm-shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --mm-radius: 8px; --mm-radius-lg: 16px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.15; }
+
+        /* NAV */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; transition: all 0.5s ease; background: rgba(26,26,46,0.97); backdrop-filter: blur(12px); box-shadow: 0 2px 30px rgba(0,0,0,0.2); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.6rem; color: white; letter-spacing: 0.2em; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--mm-gold); transition: width 0.3s ease; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-content { display: none; position: absolute; top: 100%; left: -12px; background: var(--mm-navy); border-radius: var(--mm-radius); padding: 12px 0; min-width: 220px; box-shadow: var(--mm-shadow-lg); margin-top: 12px; }
+        .nav-dropdown:hover .nav-dropdown-content { display: block; }
+        .nav-dropdown-content a { display: block; padding: 10px 24px; font-size: 0.8rem; letter-spacing: 1px; white-space: nowrap; }
+        .nav-dropdown-content a::after { display: none; }
+        .nav-dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--mm-gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; padding: 8px; }
+        .hamburger span { width: 26px; height: 2px; background: white; transition: all 0.3s ease; display: block; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--mm-navy); z-index: 999; padding: 100px 40px 40px; flex-direction: column; overflow-y: auto; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .mobile-menu a:hover { color: var(--mm-gold); }
+        .mobile-menu .sub-link { padding-left: 24px; font-size: 0.95rem; color: rgba(255,255,255,0.7); }
+
+        /* INTERIOR HERO */
+        .page-hero { background: var(--mm-navy); padding: 160px 48px 80px; text-align: center; }
+        .page-hero h1 { color: white; font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+        .page-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 560px; margin: 0 auto; }
+        .page-hero .section-accent { margin: 16px auto 20px; width: 60px; height: 3px; background: var(--mm-gold); }
+
+        /* SECTION UTILITIES */
+        section { padding: 100px 48px; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        .section-label { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--mm-orange); margin-bottom: 12px; }
+        .section-heading { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--mm-navy); margin-bottom: 8px; }
+        .section-accent { width: 60px; height: 3px; background: var(--mm-gold); margin: 16px 0 24px; }
+        .section-desc { font-size: 1.05rem; color: var(--mm-gray); max-width: 600px; line-height: 1.8; }
+        .section-dark { background: var(--mm-navy); color: white; }
+        .section-dark .section-heading { color: white; }
+        .section-dark .section-desc { color: rgba(255,255,255,0.7); }
+        .section-dark .section-label { color: var(--mm-gold); }
+        .section-cream { background: var(--mm-cream); }
+
+        /* BUTTONS */
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; font-size: 0.9rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: var(--mm-radius); text-decoration: none; cursor: pointer; border: none; transition: all 0.3s ease; letter-spacing: 0.5px; }
+        .btn-primary { background: var(--mm-orange); color: white; }
+        .btn-primary:hover { background: var(--mm-orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,81,26,0.3); }
+        .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4); }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        .btn-dark { background: var(--mm-navy); color: white; }
+        .btn-dark:hover { background: var(--mm-navy-light); transform: translateY(-2px); box-shadow: var(--mm-shadow-lg); }
+
+        /* CAPABILITIES GRID */
+        .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; margin-top: 48px; }
+        .cap-card { background: white; border-radius: var(--mm-radius-lg); padding: 36px; box-shadow: var(--mm-shadow); transition: all 0.4s ease; }
+        .cap-card:hover { transform: translateY(-6px); box-shadow: var(--mm-shadow-lg); }
+        .cap-icon { width: 56px; height: 56px; background: rgba(232,81,26,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--mm-orange); font-size: 1.5rem; margin-bottom: 20px; }
+        .cap-card h3 { font-size: 1.25rem; color: var(--mm-navy); margin-bottom: 10px; }
+        .cap-card p { color: var(--mm-gray); font-size: 0.95rem; line-height: 1.7; }
+
+        /* SHOWCASE GRID */
+        .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; margin-top: 48px; }
+        .showcase-item { border-radius: var(--mm-radius-lg); overflow: hidden; position: relative; aspect-ratio: 16/10; background: var(--mm-navy-light); }
+        .showcase-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .showcase-item .showcase-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px; background: linear-gradient(transparent, rgba(26,26,46,0.85)); color: white; font-size: 0.92rem; font-weight: 600; }
+
+        /* BENEFITS GRID */
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; margin-top: 48px; }
+        .benefit-card { text-align: center; padding: 36px 24px; }
+        .benefit-icon { width: 64px; height: 64px; background: rgba(232,81,26,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--mm-orange); font-size: 1.6rem; margin: 0 auto 20px; }
+        .benefit-card h3 { font-size: 1.15rem; color: var(--mm-navy); margin-bottom: 8px; }
+        .benefit-card p { color: var(--mm-gray); font-size: 0.92rem; line-height: 1.7; }
+
+        /* SPECS TABLE */
+        .specs-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+        .specs-table th, .specs-table td { padding: 16px 24px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .specs-table th { color: var(--mm-gold); font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .specs-table td { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+
+        /* EQUIPMENT LIST */
+        .equip-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+        .equip-list li { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; color: var(--mm-charcoal); }
+        .equip-list li::before { content: ''; width: 8px; height: 8px; background: var(--mm-orange); border-radius: 50%; flex-shrink: 0; }
+
+        /* QUALITY CALLOUT */
+        .quality-callout { background: linear-gradient(135deg, var(--mm-gold) 0%, #c49a38 100%); border-radius: var(--mm-radius-lg); padding: 56px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-top: 48px; box-shadow: var(--mm-shadow-lg); }
+        .quality-callout h3 { color: var(--mm-navy); font-size: clamp(1.4rem, 3vw, 2rem); }
+        .quality-callout p { color: rgba(26,26,46,0.7); margin-top: 8px; font-size: 1rem; max-width: 560px; }
+
+        /* RELATED SERVICES */
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin-top: 48px; }
+        .related-card { background: white; border-radius: var(--mm-radius-lg); padding: 32px; box-shadow: var(--mm-shadow); text-decoration: none; color: inherit; transition: all 0.4s ease; display: block; }
+        .related-card:hover { transform: translateY(-6px); box-shadow: var(--mm-shadow-lg); }
+        .related-card h3 { font-size: 1.2rem; color: var(--mm-navy); margin-bottom: 8px; }
+        .related-card p { color: var(--mm-gray); font-size: 0.92rem; line-height: 1.7; margin-bottom: 16px; }
+        .service-link { display: inline-flex; align-items: center; gap: 6px; color: var(--mm-orange); font-weight: 600; font-size: 0.88rem; letter-spacing: 0.5px; text-transform: uppercase; text-decoration: none; transition: gap 0.3s; }
+        .service-link:hover { gap: 10px; }
+
+        /* CTA SECTION */
+        .cta-section { text-align: center; }
+        .cta-section .section-accent { margin: 16px auto 24px; }
+        .cta-section .section-desc { margin: 0 auto 40px; }
+        .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        /* FOOTER */
+        footer { background: var(--mm-navy); color: rgba(255,255,255,0.7); padding: 80px 48px 32px; }
+        .footer-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .footer-brand p { margin-top: 16px; font-size: 0.92rem; line-height: 1.7; max-width: 300px; }
+        .footer-col h4 { color: white; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; padding: 6px 0; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--mm-gold); }
+        .footer-bottom { max-width: 1280px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+        .footer-bottom a { color: var(--mm-gold); text-decoration: none; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1024px) {
+            nav { padding: 16px 24px; }
+            section { padding: 72px 24px; }
+            .quality-callout { padding: 40px 32px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .page-hero { padding: 140px 24px 60px; }
+            .cap-grid { grid-template-columns: 1fr; }
+            .equip-list { grid-template-columns: 1fr; }
+            .quality-callout { flex-direction: column; text-align: center; padding: 32px 24px; }
+            .related-grid { grid-template-columns: 1fr; }
+            .showcase-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-brand"><span class="nav-wordmark">MIDMACH</span></a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-dropdown">
+            <a href="services.html">Services</a>
+            <div class="nav-dropdown-content">
+                <a href="services-cnc.html">CNC Machining</a>
+                <a href="services-laser.html">Laser Cutting</a>
+                <a href="services-welding.html">Robotic Welding</a>
+                <a href="services-fabrication.html">Metal Fabrication</a>
+            </div>
+        </li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="configurator.html">Configurator</a></li>
+        <li><a href="quality.html">Quality</a></li>
+        <li><a href="employment.html">Careers</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="contact.html" class="btn btn-primary" style="padding:10px 24px;font-size:0.8rem;background:var(--mm-orange);color:white;border-radius:var(--mm-radius);">Get a Quote</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="toggleMobile()">Home</a>
+    <a href="about.html" onclick="toggleMobile()">About Us</a>
+    <a href="services.html" onclick="toggleMobile()">Services</a>
+    <a href="services-cnc.html" class="sub-link" onclick="toggleMobile()">CNC Machining</a>
+    <a href="services-laser.html" class="sub-link" onclick="toggleMobile()">Laser Cutting</a>
+    <a href="services-welding.html" class="sub-link" onclick="toggleMobile()">Robotic Welding</a>
+    <a href="services-fabrication.html" class="sub-link" onclick="toggleMobile()">Metal Fabrication</a>
+    <a href="products.html" onclick="toggleMobile()">Products</a>
+    <a href="configurator.html" onclick="toggleMobile()">Configurator</a>
+    <a href="quality.html" onclick="toggleMobile()">Quality</a>
+    <a href="employment.html" onclick="toggleMobile()">Careers</a>
+    <a href="merch.html" onclick="toggleMobile()">Merch</a>
+    <a href="contact.html" onclick="toggleMobile()">Contact</a>
+</div>
+
+<!-- HERO -->
+<div class="page-hero">
+    <h1>Robotic Welding</h1>
+    <div class="section-accent"></div>
+    <p>Automated CLOOS robotic welding cells delivering consistent, high-quality weldments at production volumes for defense, agriculture, and industrial applications.</p>
+</div>
+
+<!-- SHOWCASE -->
+<section>
+    <div class="container reveal">
+        <span class="section-label">Our Welding Cells</span>
+        <h2 class="section-heading">CLOOS Robotic Welding Systems</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">Our CLOOS robotic welding cells combine multi-axis articulation with advanced seam tracking to produce repeatable, defect-free welds at speeds manual welding cannot match.</p>
+
+        <div class="showcase-grid">
+            <div class="showcase-item">
+                <img src="https://res.cloudinary.com/midmach/image/upload/v1/welding/cloos-cell-1.jpg" alt="CLOOS robotic welding cell producing MIG weld on steel assembly">
+                <div class="showcase-caption">CLOOS QIROX Multi-Axis Welding Cell</div>
+            </div>
+            <div class="showcase-item">
+                <img src="https://res.cloudinary.com/midmach/image/upload/v1/welding/cloos-cell-2.jpg" alt="Dual-station robotic welding cell with rotary positioner">
+                <div class="showcase-caption">Dual-Station Cell with Rotary Positioner</div>
+            </div>
+            <div class="showcase-item">
+                <img src="https://res.cloudinary.com/midmach/image/upload/v1/welding/cloos-cell-3.jpg" alt="Close-up of robotic TIG weld bead on stainless steel">
+                <div class="showcase-caption">Precision TIG Weld on Stainless Assembly</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="section-cream">
+    <div class="container reveal">
+        <span class="section-label">What We Do</span>
+        <h2 class="section-heading">Welding Capabilities</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">From single-piece prototypes to high-volume production runs, our robotic and manual welding capabilities cover the full spectrum of weldment needs.</p>
+
+        <div class="cap-grid">
+            <div class="cap-card">
+                <div class="cap-icon">&#9881;</div>
+                <h3>MIG Welding (GMAW)</h3>
+                <p>High-deposition robotic MIG welding for carbon steel, stainless steel, and aluminum assemblies with consistent penetration and minimal spatter.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9878;</div>
+                <h3>TIG Welding (GTAW)</h3>
+                <p>Precision TIG welding for thin-wall tubing, stainless steel, and applications requiring superior bead appearance and X-ray quality joints.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9674;</div>
+                <h3>Multi-Axis Articulation</h3>
+                <p>6-axis robotic arms paired with 2-axis positioners reach complex joint geometries and weld in optimal positions for every seam.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9733;</div>
+                <h3>High-Volume Production</h3>
+                <p>Dual-station cells with automatic part loading keep the arc burning while operators load and unload, maximizing throughput and minimizing idle time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BENEFITS -->
+<section>
+    <div class="container reveal">
+        <span class="section-label">Why Robotic</span>
+        <h2 class="section-heading">Benefits of Automated Welding</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">Robotic welding delivers measurable advantages over manual processes, especially on repeat production runs.</p>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">&#10003;</div>
+                <h3>Weld Consistency</h3>
+                <p>Every weld is identical. Programmed parameters eliminate the variability inherent in manual welding for part-to-part repeatability.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#9889;</div>
+                <h3>Faster Cycle Times</h3>
+                <p>Robotic cells weld 3&ndash;5x faster than manual processes with continuous arc-on time and automated part handling.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#9878;</div>
+                <h3>Reduced Costs</h3>
+                <p>Lower per-piece costs through reduced labor, less rework, minimal consumable waste, and higher throughput on production volumes.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">&#9733;</div>
+                <h3>Superior Quality</h3>
+                <p>Seam tracking, real-time voltage monitoring, and post-weld inspection ensure every joint meets or exceeds AWS D1.1 standards.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SPECIFICATIONS -->
+<section class="section-dark">
+    <div class="container reveal">
+        <span class="section-label">Specifications</span>
+        <h2 class="section-heading">Welding Cell Specs</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">Our CLOOS robotic welding cells are configured for maximum flexibility and production efficiency.</p>
+
+        <table class="specs-table">
+            <tr>
+                <th>Parameter</th>
+                <th>Specification</th>
+            </tr>
+            <tr>
+                <td>Robot Model</td>
+                <td>CLOOS QIROX QRC-290</td>
+            </tr>
+            <tr>
+                <td>Axes</td>
+                <td>6-axis robot + 2-axis positioner (8 total)</td>
+            </tr>
+            <tr>
+                <td>Reach</td>
+                <td>2,490 mm maximum reach</td>
+            </tr>
+            <tr>
+                <td>Processes</td>
+                <td>MIG (GMAW), TIG (GTAW), Pulsed MIG</td>
+            </tr>
+            <tr>
+                <td>Wire Feed</td>
+                <td>Tandem and single-wire configurations</td>
+            </tr>
+            <tr>
+                <td>Positioner Capacity</td>
+                <td>Up to 2,000 kg workpiece weight</td>
+            </tr>
+            <tr>
+                <td>Seam Tracking</td>
+                <td>Through-arc and laser-based seam tracking</td>
+            </tr>
+            <tr>
+                <td>Max Part Envelope</td>
+                <td>2,000 mm x 1,500 mm x 1,200 mm</td>
+            </tr>
+            <tr>
+                <td>Stations</td>
+                <td>Dual-station for load/unload during welding</td>
+            </tr>
+        </table>
+
+        <!-- Quality Callout -->
+        <div class="quality-callout">
+            <div>
+                <h3>Certified Weld Quality</h3>
+                <p>All robotic welds are performed under our ISO 9001-registered quality system with full WPS documentation, welder qualifications, and NDT inspection capabilities.</p>
+            </div>
+            <a href="quality.html" class="btn btn-dark">Our Quality Program &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<!-- RELATED SERVICES -->
+<section>
+    <div class="container reveal">
+        <span class="section-label">Explore More</span>
+        <h2 class="section-heading">Related Services</h2>
+        <div class="section-accent"></div>
+
+        <div class="related-grid">
+            <a href="services-cnc.html" class="related-card">
+                <h3>CNC Machining</h3>
+                <p>Multi-axis precision machining for complex parts in steel, aluminum, titanium, and exotic alloys.</p>
+                <span class="service-link">Learn More &rarr;</span>
+            </a>
+            <a href="services-fabrication.html" class="related-card">
+                <h3>Metal Fabrication</h3>
+                <p>Full-service forming, bending, assembly, and finishing to complement welded assemblies.</p>
+                <span class="service-link">Learn More &rarr;</span>
+            </a>
+            <a href="services-laser.html" class="related-card">
+                <h3>Laser Cutting</h3>
+                <p>High-speed fiber laser cutting with automated material handling for flat and tubular stock.</p>
+                <span class="service-link">Learn More &rarr;</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section-dark cta-section">
+    <div class="container reveal">
+        <span class="section-label">Start Your Project</span>
+        <h2 class="section-heading">Ready for Production-Quality Welds?</h2>
+        <div class="section-accent" style="margin:16px auto 24px;"></div>
+        <p class="section-desc" style="margin:0 auto 40px;">Send us your weldment drawings and our engineering team will provide a detailed quote&mdash;typically within 24 hours.</p>
+        <div class="cta-actions">
+            <a href="contact.html" class="btn btn-primary">Request a Quote &rarr;</a>
+            <a href="tel:7015550100" class="btn btn-outline">Call (701) 555-0100</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <span class="nav-wordmark" style="font-size:1.4rem;">MIDMACH</span>
+            <p>Precision manufacturing for defense, aerospace, and industrial applications. Over 60 years of experience delivering quality solutions.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Services</h4>
+            <a href="services-cnc.html">CNC Machining</a>
+            <a href="services-laser.html">Laser Cutting</a>
+            <a href="services-welding.html">Robotic Welding</a>
+            <a href="services-fabrication.html">Metal Fabrication</a>
+        </div>
+        <div class="footer-col">
+            <h4>Company</h4>
+            <a href="about.html">About Us</a>
+            <a href="quality.html">Quality</a>
+            <a href="employment.html">Careers</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+            <h4>More</h4>
+            <a href="products.html">Products</a>
+            <a href="configurator.html">Configurator</a>
+            <a href="merch.html">Merchandise</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 MidMach. All rights reserved.</span>
+        <span>Formerly Midwestern Machine</span>
+    </div>
+</footer>
+
+<script>
+function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+    document.querySelector('.hamburger').classList.toggle('active');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+}
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>

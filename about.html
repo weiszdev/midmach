@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — MidMach Precision Manufacturing</title>
+    <meta name="description" content="Learn about MidMach's 60+ year history of precision manufacturing. Formerly Midwestern Machine, serving defense, aerospace, and industrial industries from Bismarck, North Dakota.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #2d2d2d; background: #FAFAF9; overflow-x: hidden; line-height: 1.6; }
+
+        /* ===== DESIGN SYSTEM ===== */
+        :root {
+            --mm-navy: #1a1a2e; --mm-navy-light: #2a2a42; --mm-orange: #E8511A; --mm-orange-dark: #c7410f;
+            --mm-gold: #D4A843; --mm-gold-light: #e8c96e; --mm-charcoal: #2d2d2d; --mm-gray: #6b6b6b;
+            --mm-gray-light: #999; --mm-cream: #F8F6F1; --mm-white: #FAFAF9;
+            --mm-shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --mm-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --mm-shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --mm-radius: 8px; --mm-radius-lg: 16px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.15; }
+
+        /* ===== NAVIGATION ===== */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 12px 48px; display: flex; justify-content: space-between; align-items: center; transition: all 0.5s ease; background: rgba(26,26,46,0.97); backdrop-filter: blur(12px); box-shadow: 0 2px 30px rgba(0,0,0,0.2); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.6rem; color: white; letter-spacing: 0.2em; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--mm-gold); transition: width 0.3s ease; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-content { display: none; position: absolute; top: 100%; left: -12px; background: var(--mm-navy); border-radius: var(--mm-radius); padding: 12px 0; min-width: 220px; box-shadow: var(--mm-shadow-lg); margin-top: 12px; }
+        .nav-dropdown:hover .nav-dropdown-content { display: block; }
+        .nav-dropdown-content a { display: block; padding: 10px 24px; font-size: 0.8rem; letter-spacing: 1px; white-space: nowrap; }
+        .nav-dropdown-content a::after { display: none; }
+        .nav-dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--mm-gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; padding: 8px; }
+        .hamburger span { width: 26px; height: 2px; background: white; transition: all 0.3s ease; display: block; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--mm-navy); z-index: 999; padding: 100px 40px 40px; flex-direction: column; overflow-y: auto; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .mobile-menu a:hover { color: var(--mm-gold); }
+        .mobile-menu .sub-link { padding-left: 24px; font-size: 0.95rem; color: rgba(255,255,255,0.7); }
+
+        /* ===== INTERIOR HERO ===== */
+        .page-hero { background: var(--mm-navy); padding: 160px 48px 80px; text-align: center; }
+        .page-hero h1 { color: white; font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+        .page-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 560px; margin: 0 auto; }
+        .page-hero .section-accent { margin: 16px auto 20px; width: 60px; height: 3px; background: var(--mm-gold); }
+
+        /* ===== BUTTONS ===== */
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; font-size: 0.9rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: var(--mm-radius); text-decoration: none; cursor: pointer; border: none; transition: all 0.3s ease; letter-spacing: 0.5px; }
+        .btn-primary { background: var(--mm-orange); color: white; }
+        .btn-primary:hover { background: var(--mm-orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,81,26,0.3); }
+        .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4); }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        .btn-gold { background: var(--mm-gold); color: var(--mm-navy); font-weight: 700; }
+        .btn-gold:hover { background: var(--mm-gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,67,0.3); }
+        .btn-dark { background: var(--mm-navy); color: white; }
+        .btn-dark:hover { background: var(--mm-navy-light); transform: translateY(-2px); box-shadow: var(--mm-shadow-lg); }
+
+        /* ===== SECTION UTILITIES ===== */
+        section { padding: 100px 48px; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        .section-label { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--mm-orange); margin-bottom: 12px; }
+        .section-heading { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--mm-navy); margin-bottom: 8px; }
+        .section-accent { width: 60px; height: 3px; background: var(--mm-gold); margin: 16px 0 24px; }
+        .section-desc { font-size: 1.05rem; color: var(--mm-gray); max-width: 600px; line-height: 1.8; }
+        .section-dark { background: var(--mm-navy); color: white; }
+        .section-dark .section-heading { color: white; }
+        .section-dark .section-desc { color: rgba(255,255,255,0.7); }
+        .section-dark .section-label { color: var(--mm-gold); }
+        .section-cream { background: var(--mm-cream); }
+
+        /* ===== SPLIT SECTION ===== */
+        .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-top: 48px; }
+        .split-image { border-radius: var(--mm-radius-lg); overflow: hidden; aspect-ratio: 4/3; }
+        .split-image img { width: 100%; height: 100%; object-fit: cover; }
+        .value-list { list-style: none; display: flex; flex-direction: column; gap: 20px; margin-top: 32px; }
+        .value-item { display: flex; gap: 16px; align-items: flex-start; }
+        .value-icon { flex-shrink: 0; width: 48px; height: 48px; background: rgba(232,81,26,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--mm-orange); font-size: 1.4rem; }
+        .value-item h4 { font-size: 1.15rem; color: var(--mm-navy); margin-bottom: 4px; }
+        .value-item p { color: var(--mm-gray); font-size: 0.95rem; line-height: 1.6; }
+
+        /* ===== HISTORY TIMELINE ===== */
+        .history-content { max-width: 800px; margin: 0 auto; }
+        .history-content p { color: var(--mm-gray); font-size: 1.05rem; line-height: 1.9; margin-bottom: 20px; }
+        .history-content p strong { color: var(--mm-navy); }
+        .history-highlight { background: var(--mm-cream); border-left: 4px solid var(--mm-gold); padding: 24px 32px; border-radius: 0 var(--mm-radius) var(--mm-radius) 0; margin: 32px 0; }
+        .history-highlight p { color: var(--mm-charcoal); font-size: 1.1rem; margin-bottom: 0; }
+
+        /* ===== CAPABILITIES GRID ===== */
+        .capabilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 48px; }
+        .capability-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--mm-radius-lg); padding: 36px 28px; text-align: center; transition: all 0.3s; }
+        .capability-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+        .capability-icon { font-size: 2.5rem; margin-bottom: 16px; display: block; color: var(--mm-gold); }
+        .capability-card h3 { color: white; font-size: 1.25rem; margin-bottom: 10px; }
+        .capability-card p { color: rgba(255,255,255,0.7); font-size: 0.92rem; line-height: 1.7; }
+
+        /* ===== FACILITY SHOWCASE ===== */
+        .facility-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+        .facility-card { position: relative; border-radius: var(--mm-radius-lg); overflow: hidden; aspect-ratio: 16/10; cursor: pointer; }
+        .facility-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .facility-card:hover img { transform: scale(1.05); }
+        .facility-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,26,46,0.85) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; }
+        .facility-card-overlay h3 { color: white; font-size: 1.5rem; margin-bottom: 6px; }
+        .facility-card-overlay p { color: rgba(255,255,255,0.75); font-size: 0.9rem; }
+        .facility-card-full { grid-column: 1 / -1; aspect-ratio: 21/9; }
+
+        /* ===== GOLD CTA BANNER ===== */
+        .gold-cta { position: relative; z-index: 10; margin: -60px 48px 0; background: linear-gradient(135deg, var(--mm-gold) 0%, #c49a38 100%); border-radius: var(--mm-radius-lg); padding: 56px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; box-shadow: var(--mm-shadow-lg); }
+        .gold-cta h2 { color: var(--mm-navy); font-size: clamp(1.6rem, 3vw, 2.2rem); max-width: 600px; }
+        .gold-cta p { color: rgba(26,26,46,0.7); margin-top: 8px; font-size: 1rem; }
+
+        /* ===== FOOTER ===== */
+        footer { background: var(--mm-navy); color: rgba(255,255,255,0.7); padding: 80px 48px 32px; }
+        .footer-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .footer-brand p { margin-top: 16px; font-size: 0.92rem; line-height: 1.7; max-width: 300px; }
+        .footer-col h4 { color: white; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; padding: 6px 0; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--mm-gold); }
+        .footer-bottom { max-width: 1280px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+        .footer-bottom a { color: var(--mm-gold); text-decoration: none; }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            nav { padding: 10px 24px; }
+            section { padding: 72px 24px; }
+            .gold-cta { margin: -60px 24px 0; padding: 40px 32px; }
+            .split-section { gap: 40px; }
+            .capabilities-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .page-hero { padding: 140px 24px 60px; }
+            .split-section { grid-template-columns: 1fr; }
+            .capabilities-grid { grid-template-columns: 1fr; }
+            .facility-grid { grid-template-columns: 1fr; }
+            .facility-card-full { aspect-ratio: 16/10; }
+            .gold-cta { flex-direction: column; text-align: center; margin: -40px 16px 0; padding: 32px 24px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            section { padding: 56px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav>
+    <a href="index.html" class="nav-brand"><span class="nav-wordmark">MIDMACH</span></a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-dropdown">
+            <a href="services.html">Services</a>
+            <div class="nav-dropdown-content">
+                <a href="services-cnc.html">CNC Machining</a>
+                <a href="services-laser.html">Laser Cutting</a>
+                <a href="services-welding.html">Robotic Welding</a>
+                <a href="services-fabrication.html">Metal Fabrication</a>
+            </div>
+        </li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="configurator.html">Configurator</a></li>
+        <li><a href="quality.html">Quality</a></li>
+        <li><a href="employment.html">Careers</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="contact.html" class="btn btn-primary" style="padding:10px 24px;font-size:0.8rem;">Get a Quote</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="toggleMobile()">Home</a>
+    <a href="about.html" onclick="toggleMobile()">About Us</a>
+    <a href="services.html" onclick="toggleMobile()">Services</a>
+    <a href="services-cnc.html" class="sub-link" onclick="toggleMobile()">CNC Machining</a>
+    <a href="services-laser.html" class="sub-link" onclick="toggleMobile()">Laser Cutting</a>
+    <a href="services-welding.html" class="sub-link" onclick="toggleMobile()">Robotic Welding</a>
+    <a href="services-fabrication.html" class="sub-link" onclick="toggleMobile()">Metal Fabrication</a>
+    <a href="products.html" onclick="toggleMobile()">Products</a>
+    <a href="configurator.html" onclick="toggleMobile()">Configurator</a>
+    <a href="quality.html" onclick="toggleMobile()">Quality</a>
+    <a href="employment.html" onclick="toggleMobile()">Careers</a>
+    <a href="merch.html" onclick="toggleMobile()">Merch</a>
+    <a href="contact.html" onclick="toggleMobile()">Contact</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<div class="page-hero">
+    <h1>About MidMach</h1>
+    <div class="section-accent"></div>
+    <p>Over 60 years of precision manufacturing excellence, serving defense, aerospace, and industrial markets from Bismarck, North Dakota.</p>
+</div>
+
+<!-- ===== COMPANY HISTORY ===== -->
+<section>
+    <div class="container reveal">
+        <div style="text-align:center;">
+            <span class="section-label">Our Story</span>
+            <h2 class="section-heading">Built on Decades of Excellence</h2>
+            <div class="section-accent" style="margin:16px auto 24px;"></div>
+        </div>
+        <div class="history-content">
+            <p>MidMach traces its roots back to the early 1960s, when <strong>Midwestern Machine</strong> was founded in Bismarck, North Dakota. What started as a small machine shop serving the local agricultural and energy sectors quickly grew into a trusted name in precision manufacturing across the upper Midwest.</p>
+            <p>For decades, Midwestern Machine built a reputation for quality workmanship, reliable delivery, and the kind of hands-on customer service that only comes from a team that takes pride in every part they produce.</p>
+            <div class="history-highlight">
+                <p><strong>In 2014, Midwestern Machine became MidMach</strong> &mdash; a new name celebrating a fresh chapter while honoring the foundation of quality and innovation that defined the company from day one.</p>
+            </div>
+            <p>The rebrand marked the beginning of a major expansion. MidMach invested heavily in advanced manufacturing technology, including <strong>CLOOS robotic welding cells</strong>, <strong>LVD Strippit Phoenix fiber laser systems</strong>, and <strong>multi-axis CNC machining centers</strong>. The company moved into a purpose-built, 150,000+ square foot facility designed for high-volume production, precision work, and future growth.</p>
+            <p>Today, MidMach serves defense, aerospace, industrial, and energy clients nationwide with a full suite of manufacturing capabilities &mdash; all under one roof, all held to the highest quality standards.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== VALUES (Split Section) ===== -->
+<section class="section-cream">
+    <div class="container reveal">
+        <div class="split-section">
+            <div class="split-image">
+                <img src="https://res.cloudinary.com/demo/image/upload/v1/midmach/facility-exterior.jpg" alt="MidMach facility exterior" onerror="this.parentElement.style.background='linear-gradient(135deg,#E8511A,#c7410f)'">
+            </div>
+            <div>
+                <span class="section-label">What Drives Us</span>
+                <h2 class="section-heading">Our Values</h2>
+                <div class="section-accent"></div>
+                <p class="section-desc">Every project that comes through our doors is backed by the same commitment that has defined us for over six decades.</p>
+                <ul class="value-list">
+                    <li class="value-item">
+                        <div class="value-icon">&#9654;</div>
+                        <div>
+                            <h4>Solution-Driven Processes</h4>
+                            <p>Engineered for efficiency, quality, and fast turnaround &mdash; tailored to your unique requirements.</p>
+                        </div>
+                    </li>
+                    <li class="value-item">
+                        <div class="value-icon">&#9733;</div>
+                        <div>
+                            <h4>Unbeatable Customer Service</h4>
+                            <p>Long-lasting partnerships built on reliability, transparency, and satisfaction on every order.</p>
+                        </div>
+                    </li>
+                    <li class="value-item">
+                        <div class="value-icon">&#10003;</div>
+                        <div>
+                            <h4>High-Quality Work</h4>
+                            <p>Careful consideration embedded into every production process, from design through delivery.</p>
+                        </div>
+                    </li>
+                    <li class="value-item">
+                        <div class="value-icon">&#9881;</div>
+                        <div>
+                            <h4>Continuous Investment</h4>
+                            <p>Ongoing investment in the latest technology and training to stay at the forefront of manufacturing.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== KEY CAPABILITIES ===== -->
+<section class="section-dark">
+    <div class="container reveal">
+        <div style="text-align:center;">
+            <span class="section-label">What We Do</span>
+            <h2 class="section-heading">Key Capabilities</h2>
+            <div class="section-accent" style="margin:16px auto 24px;"></div>
+            <p class="section-desc" style="margin:0 auto;">Comprehensive manufacturing capabilities under one roof, purpose-built for precision and scale.</p>
+        </div>
+        <div class="capabilities-grid">
+            <div class="capability-card">
+                <span class="capability-icon">&#9881;</span>
+                <h3>CNC Machining</h3>
+                <p>Multi-axis CNC turning and milling with tight tolerances for complex geometries in virtually any material.</p>
+            </div>
+            <div class="capability-card">
+                <span class="capability-icon">&#9733;</span>
+                <h3>Laser Cutting</h3>
+                <p>LVD Strippit Phoenix fiber laser systems with automated material handling for high-speed precision cutting.</p>
+            </div>
+            <div class="capability-card">
+                <span class="capability-icon">&#9889;</span>
+                <h3>Robotic Welding</h3>
+                <p>CLOOS robotic welding cells delivering consistent, high-quality welds at production volumes with multi-axis precision.</p>
+            </div>
+            <div class="capability-card">
+                <span class="capability-icon">&#9879;</span>
+                <h3>Metal Fabrication</h3>
+                <p>Full-service fabrication including forming, bending, assembly, finishing, and complete turnkey solutions.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FACILITY PHOTOS ===== -->
+<section class="section-cream">
+    <div class="container reveal">
+        <div style="text-align:center;">
+            <span class="section-label">Our Facility</span>
+            <h2 class="section-heading">Inside MidMach</h2>
+            <div class="section-accent" style="margin:16px auto 24px;"></div>
+            <p class="section-desc" style="margin:0 auto;">A look inside our 150,000+ square foot state-of-the-art manufacturing facility in Bismarck, North Dakota.</p>
+        </div>
+        <div class="facility-grid">
+            <div class="facility-card">
+                <img src="https://res.cloudinary.com/demo/image/upload/v1/midmach/cloos-welding-cell-1.jpg" alt="CLOOS Robotic Welding Cell" onerror="this.style.background='linear-gradient(135deg, #1a1a2e, #2a2a42)';this.style.minHeight='240px'">
+                <div class="facility-card-overlay">
+                    <h3>CLOOS Robotic Welding</h3>
+                    <p>Automated precision welding cells</p>
+                </div>
+            </div>
+            <div class="facility-card">
+                <img src="https://res.cloudinary.com/demo/image/upload/v1/midmach/cloos-welding-cell-2.jpg" alt="CLOOS Multi-Axis Welding Robot" onerror="this.style.background='linear-gradient(135deg, #1a1a2e, #2a2a42)';this.style.minHeight='240px'">
+                <div class="facility-card-overlay">
+                    <h3>Advanced Robotics</h3>
+                    <p>CLOOS multi-axis welding systems</p>
+                </div>
+            </div>
+            <div class="facility-card facility-card-full">
+                <img src="https://res.cloudinary.com/demo/image/upload/v1/midmach/facility-floor-wide.jpg" alt="MidMach Manufacturing Floor" onerror="this.style.background='linear-gradient(135deg, #1a1a2e, #2a2a42)';this.style.minHeight='300px'">
+                <div class="facility-card-overlay">
+                    <h3>150,000+ Sq Ft Facility</h3>
+                    <p>Purpose-built for precision manufacturing at scale</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<section class="section-dark" style="padding-bottom:140px;">
+    <div class="container reveal" style="text-align:center;">
+        <span class="section-label">Work With Us</span>
+        <h2 class="section-heading">Ready to Start Your Next Project?</h2>
+        <div class="section-accent" style="margin:16px auto 24px;"></div>
+        <p class="section-desc" style="margin:0 auto 32px;">Our engineering team is ready to review your designs and provide a competitive quote.</p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+            <a href="contact.html" class="btn btn-primary" style="font-size:1rem;padding:16px 40px;">Get a Quote &rarr;</a>
+            <a href="services.html" class="btn btn-outline" style="font-size:1rem;padding:16px 40px;">View Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <span class="nav-wordmark" style="font-size:1.4rem;">MIDMACH</span>
+            <p>Precision manufacturing for defense, aerospace, and industrial applications. Over 60 years of experience delivering quality solutions.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Services</h4>
+            <a href="services-cnc.html">CNC Machining</a>
+            <a href="services-laser.html">Laser Cutting</a>
+            <a href="services-welding.html">Robotic Welding</a>
+            <a href="services-fabrication.html">Metal Fabrication</a>
+        </div>
+        <div class="footer-col">
+            <h4>Company</h4>
+            <a href="about.html">About Us</a>
+            <a href="quality.html">Quality</a>
+            <a href="employment.html">Careers</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+            <h4>More</h4>
+            <a href="products.html">Products</a>
+            <a href="configurator.html">Configurator</a>
+            <a href="merch.html">Merchandise</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 MidMach. All rights reserved.</span>
+        <span>Formerly Midwestern Machine</span>
+    </div>
+</footer>
+
+<script>
+function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+    document.querySelector('.hamburger').classList.toggle('active');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+}
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>

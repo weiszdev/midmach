@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers — MidMach Precision Manufacturing</title>
+    <meta name="description" content="Join the MidMach team. We're hiring CNC operators, welders, fabricators, and quality inspectors. Competitive pay, full benefits, and a brand-new facility.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; color: #2d2d2d; background: #FAFAF9; overflow-x: hidden; line-height: 1.6; }
+
+        :root {
+            --mm-navy: #1a1a2e; --mm-navy-light: #2a2a42; --mm-orange: #E8511A; --mm-orange-dark: #c7410f;
+            --mm-gold: #D4A843; --mm-gold-light: #e8c96e; --mm-charcoal: #2d2d2d; --mm-gray: #6b6b6b;
+            --mm-gray-light: #999; --mm-cream: #F8F6F1; --mm-white: #FAFAF9;
+            --mm-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --mm-shadow: 0 4px 20px rgba(0,0,0,0.08); --mm-shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+            --mm-radius: 8px; --mm-radius-lg: 16px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.15; }
+
+        /* NAV */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; transition: all 0.5s ease; background: rgba(26,26,46,0.97); backdrop-filter: blur(12px); box-shadow: 0 2px 30px rgba(0,0,0,0.2); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-wordmark { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.6rem; color: white; letter-spacing: 0.2em; text-transform: uppercase; }
+        .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; position: relative; padding-bottom: 4px; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--mm-gold); transition: width 0.3s ease; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-content { display: none; position: absolute; top: 100%; left: -12px; background: var(--mm-navy); border-radius: var(--mm-radius); padding: 12px 0; min-width: 220px; box-shadow: var(--mm-shadow-lg); margin-top: 12px; }
+        .nav-dropdown:hover .nav-dropdown-content { display: block; }
+        .nav-dropdown-content a { display: block; padding: 10px 24px; font-size: 0.8rem; letter-spacing: 1px; white-space: nowrap; }
+        .nav-dropdown-content a::after { display: none; }
+        .nav-dropdown-content a:hover { background: rgba(255,255,255,0.08); color: var(--mm-gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; padding: 8px; }
+        .hamburger span { width: 26px; height: 2px; background: white; transition: all 0.3s ease; display: block; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--mm-navy); z-index: 999; padding: 100px 40px 40px; flex-direction: column; overflow-y: auto; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { color: white; text-decoration: none; font-size: 1.1rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .mobile-menu a:hover { color: var(--mm-gold); }
+        .mobile-menu .sub-link { padding-left: 24px; font-size: 0.95rem; color: rgba(255,255,255,0.7); }
+
+        /* INTERIOR HERO */
+        .page-hero { background: var(--mm-navy); padding: 160px 48px 80px; text-align: center; }
+        .page-hero h1 { color: white; font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 12px; }
+        .page-hero p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 560px; margin: 0 auto; }
+        .page-hero .section-accent { margin: 16px auto 20px; width: 60px; height: 3px; background: var(--mm-gold); }
+
+        /* SECTION UTILITIES */
+        section { padding: 100px 48px; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        .section-label { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--mm-orange); margin-bottom: 12px; }
+        .section-heading { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--mm-navy); margin-bottom: 8px; }
+        .section-accent { width: 60px; height: 3px; background: var(--mm-gold); margin: 16px 0 24px; }
+        .section-desc { font-size: 1.05rem; color: var(--mm-gray); max-width: 600px; line-height: 1.8; }
+        .section-dark { background: var(--mm-navy); color: white; }
+        .section-dark .section-heading { color: white; }
+        .section-dark .section-desc { color: rgba(255,255,255,0.7); }
+        .section-dark .section-label { color: var(--mm-gold); }
+        .section-cream { background: var(--mm-cream); }
+
+        /* BUTTONS */
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; font-size: 0.9rem; font-weight: 600; font-family: 'Inter', sans-serif; border-radius: var(--mm-radius); text-decoration: none; cursor: pointer; border: none; transition: all 0.3s ease; letter-spacing: 0.5px; }
+        .btn-primary { background: var(--mm-orange); color: white; }
+        .btn-primary:hover { background: var(--mm-orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,81,26,0.3); }
+        .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.4); }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        .btn-dark { background: var(--mm-navy); color: white; }
+        .btn-dark:hover { background: var(--mm-navy-light); transform: translateY(-2px); box-shadow: var(--mm-shadow-lg); }
+
+        /* CAPABILITIES GRID (reused for Why MidMach) */
+        .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; margin-top: 48px; }
+        .cap-card { background: white; border-radius: var(--mm-radius-lg); padding: 36px; box-shadow: var(--mm-shadow); transition: all 0.4s ease; }
+        .cap-card:hover { transform: translateY(-6px); box-shadow: var(--mm-shadow-lg); }
+        .cap-icon { width: 56px; height: 56px; background: rgba(232,81,26,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--mm-orange); font-size: 1.5rem; margin-bottom: 20px; }
+        .cap-card h3 { font-size: 1.25rem; color: var(--mm-navy); margin-bottom: 10px; }
+        .cap-card p { color: var(--mm-gray); font-size: 0.95rem; line-height: 1.7; }
+
+        /* BENEFITS GRID */
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-top: 48px; }
+        .benefit-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--mm-radius-lg); padding: 32px 28px; text-align: center; transition: all 0.3s; }
+        .benefit-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+        .benefit-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+        .benefit-card h3 { font-size: 1.1rem; color: white; margin-bottom: 8px; }
+        .benefit-card p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.7; }
+
+        /* JOB LISTINGS */
+        .job-list { display: flex; flex-direction: column; gap: 20px; margin-top: 48px; }
+        .job-card { background: white; border-radius: var(--mm-radius-lg); padding: 32px 36px; box-shadow: var(--mm-shadow); display: flex; justify-content: space-between; align-items: center; gap: 24px; transition: all 0.4s ease; }
+        .job-card:hover { transform: translateY(-4px); box-shadow: var(--mm-shadow-lg); }
+        .job-info h3 { font-size: 1.25rem; color: var(--mm-navy); margin-bottom: 6px; }
+        .job-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+        .job-meta span { font-size: 0.88rem; color: var(--mm-gray); display: inline-flex; align-items: center; gap: 6px; }
+        .job-meta span strong { color: var(--mm-charcoal); font-weight: 600; }
+        .job-tag { display: inline-block; background: rgba(232,81,26,0.08); color: var(--mm-orange); font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-top: 10px; }
+
+        /* QUALITY CALLOUT */
+        .quality-callout { background: linear-gradient(135deg, var(--mm-gold) 0%, #c49a38 100%); border-radius: var(--mm-radius-lg); padding: 56px 48px; display: flex; justify-content: space-between; align-items: center; gap: 32px; margin-top: 48px; box-shadow: var(--mm-shadow-lg); }
+        .quality-callout h3 { color: var(--mm-navy); font-size: clamp(1.4rem, 3vw, 2rem); }
+        .quality-callout p { color: rgba(26,26,46,0.7); margin-top: 8px; font-size: 1rem; max-width: 560px; }
+
+        /* CTA SECTION */
+        .cta-section { text-align: center; }
+        .cta-section .section-accent { margin: 16px auto 24px; }
+        .cta-section .section-desc { margin: 0 auto 40px; }
+        .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        /* FOOTER */
+        footer { background: var(--mm-navy); color: rgba(255,255,255,0.7); padding: 80px 48px 32px; }
+        .footer-grid { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+        .footer-brand p { margin-top: 16px; font-size: 0.92rem; line-height: 1.7; max-width: 300px; }
+        .footer-col h4 { color: white; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; padding: 6px 0; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--mm-gold); }
+        .footer-bottom { max-width: 1280px; margin: 48px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+        .footer-bottom a { color: var(--mm-gold); text-decoration: none; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1024px) {
+            nav { padding: 16px 24px; }
+            section { padding: 72px 24px; }
+            .quality-callout { padding: 40px 32px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+            .page-hero { padding: 140px 24px 60px; }
+            .cap-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr 1fr; }
+            .job-card { flex-direction: column; align-items: flex-start; }
+            .quality-callout { flex-direction: column; text-align: center; padding: 32px 24px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-brand"><span class="nav-wordmark">MIDMACH</span></a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="nav-dropdown">
+            <a href="services.html">Services</a>
+            <div class="nav-dropdown-content">
+                <a href="services-cnc.html">CNC Machining</a>
+                <a href="services-laser.html">Laser Cutting</a>
+                <a href="services-welding.html">Robotic Welding</a>
+                <a href="services-fabrication.html">Metal Fabrication</a>
+            </div>
+        </li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="configurator.html">Configurator</a></li>
+        <li><a href="quality.html">Quality</a></li>
+        <li><a href="employment.html">Careers</a></li>
+        <li><a href="merch.html">Merch</a></li>
+        <li><a href="contact.html" class="btn btn-primary" style="padding:10px 24px;font-size:0.8rem;background:var(--mm-orange);color:white;border-radius:var(--mm-radius);">Get a Quote</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+    <a href="index.html" onclick="toggleMobile()">Home</a>
+    <a href="about.html" onclick="toggleMobile()">About Us</a>
+    <a href="services.html" onclick="toggleMobile()">Services</a>
+    <a href="services-cnc.html" class="sub-link" onclick="toggleMobile()">CNC Machining</a>
+    <a href="services-laser.html" class="sub-link" onclick="toggleMobile()">Laser Cutting</a>
+    <a href="services-welding.html" class="sub-link" onclick="toggleMobile()">Robotic Welding</a>
+    <a href="services-fabrication.html" class="sub-link" onclick="toggleMobile()">Metal Fabrication</a>
+    <a href="products.html" onclick="toggleMobile()">Products</a>
+    <a href="configurator.html" onclick="toggleMobile()">Configurator</a>
+    <a href="quality.html" onclick="toggleMobile()">Quality</a>
+    <a href="employment.html" onclick="toggleMobile()">Careers</a>
+    <a href="merch.html" onclick="toggleMobile()">Merch</a>
+    <a href="contact.html" onclick="toggleMobile()">Contact</a>
+</div>
+
+<!-- HERO -->
+<div class="page-hero">
+    <h1>Join Our Team</h1>
+    <div class="section-accent"></div>
+    <p>Build your career at MidMach&mdash;where skilled tradespeople, modern equipment, and a brand-new facility come together.</p>
+</div>
+
+<!-- WHY MIDMACH -->
+<section>
+    <div class="container reveal">
+        <span class="section-label">Why MidMach</span>
+        <h2 class="section-heading">A Great Place to Work</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">We invest in our people with competitive compensation, a safe and modern work environment, and real opportunities for growth.</p>
+
+        <div class="cap-grid">
+            <div class="cap-card">
+                <div class="cap-icon">&#9733;</div>
+                <h3>Brand-New Facility</h3>
+                <p>Our state-of-the-art manufacturing facility features climate-controlled bays, overhead cranes, LED lighting, and the latest equipment to make your work easier and safer.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9881;</div>
+                <h3>Modern Equipment</h3>
+                <p>Work with the best tools in the industry&mdash;CLOOS robotic welders, Mazak CNC machines, fiber lasers, and advanced inspection systems.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9878;</div>
+                <h3>Career Growth</h3>
+                <p>We promote from within and invest in training. From apprenticeships to leadership development, your path forward is here.</p>
+            </div>
+            <div class="cap-card">
+                <div class="cap-icon">&#9674;</div>
+                <h3>Team Culture</h3>
+                <p>A close-knit, employee-first culture with regular team events, safety recognition programs, and open-door management.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="section-dark">
+    <div class="container reveal">
+        <span class="section-label">Benefits</span>
+        <h2 class="section-heading">What We Offer</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">MidMach provides a comprehensive benefits package to support you and your family.</p>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9829;</span>
+                <h3>Health Insurance</h3>
+                <p>Medical, dental, and vision coverage for you and your dependents with company-paid premiums.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9878;</span>
+                <h3>401(k) Match</h3>
+                <p>Company-matched 401(k) retirement plan to help you build long-term financial security.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9788;</span>
+                <h3>Paid Time Off</h3>
+                <p>Generous PTO policy plus paid holidays so you can recharge and spend time with family.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9733;</span>
+                <h3>Training &amp; Development</h3>
+                <p>On-the-job training, apprenticeship programs, tuition reimbursement, and certification support.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9881;</span>
+                <h3>Safety Gear Provided</h3>
+                <p>All PPE, safety boots, welding helmets, and specialty equipment provided at no cost to you.</p>
+            </div>
+            <div class="benefit-card">
+                <span class="benefit-icon">&#9830;</span>
+                <h3>Life &amp; Disability</h3>
+                <p>Company-paid life insurance and short- and long-term disability coverage for peace of mind.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OPEN POSITIONS -->
+<section>
+    <div class="container reveal">
+        <span class="section-label">Open Positions</span>
+        <h2 class="section-heading">Current Openings</h2>
+        <div class="section-accent"></div>
+        <p class="section-desc">We're growing and looking for skilled, motivated team members. See what's available and apply today.</p>
+
+        <div class="job-list">
+            <div class="job-card">
+                <div class="job-info">
+                    <h3>CNC Operator / Machinist</h3>
+                    <div class="job-meta">
+                        <span><strong>Shift:</strong> 1st &amp; 2nd</span>
+                        <span><strong>Type:</strong> Full-Time</span>
+                        <span><strong>Experience:</strong> 2+ years</span>
+                    </div>
+                    <span class="job-tag">Now Hiring</span>
+                </div>
+                <a href="mailto:careers@midmach.com?subject=Application%20-%20CNC%20Operator" class="btn btn-primary" style="white-space:nowrap;">Apply Now &rarr;</a>
+            </div>
+
+            <div class="job-card">
+                <div class="job-info">
+                    <h3>Welder / Robotic Weld Operator</h3>
+                    <div class="job-meta">
+                        <span><strong>Shift:</strong> 1st</span>
+                        <span><strong>Type:</strong> Full-Time</span>
+                        <span><strong>Experience:</strong> MIG/TIG certified</span>
+                    </div>
+                    <span class="job-tag">Now Hiring</span>
+                </div>
+                <a href="mailto:careers@midmach.com?subject=Application%20-%20Welder" class="btn btn-primary" style="white-space:nowrap;">Apply Now &rarr;</a>
+            </div>
+
+            <div class="job-card">
+                <div class="job-info">
+                    <h3>Metal Fabricator / Fitter</h3>
+                    <div class="job-meta">
+                        <span><strong>Shift:</strong> 1st</span>
+                        <span><strong>Type:</strong> Full-Time</span>
+                        <span><strong>Experience:</strong> 1+ years</span>
+                    </div>
+                    <span class="job-tag">Now Hiring</span>
+                </div>
+                <a href="mailto:careers@midmach.com?subject=Application%20-%20Fabricator" class="btn btn-primary" style="white-space:nowrap;">Apply Now &rarr;</a>
+            </div>
+
+            <div class="job-card">
+                <div class="job-info">
+                    <h3>Quality Inspector</h3>
+                    <div class="job-meta">
+                        <span><strong>Shift:</strong> 1st</span>
+                        <span><strong>Type:</strong> Full-Time</span>
+                        <span><strong>Experience:</strong> CMM / GD&amp;T preferred</span>
+                    </div>
+                    <span class="job-tag">Now Hiring</span>
+                </div>
+                <a href="mailto:careers@midmach.com?subject=Application%20-%20Quality%20Inspector" class="btn btn-primary" style="white-space:nowrap;">Apply Now &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Application Callout -->
+        <div class="quality-callout">
+            <div>
+                <h3>Don't See Your Role?</h3>
+                <p>We're always looking for talented people. Send your resume to careers@midmach.com and tell us what you bring to the table&mdash;we'll be in touch.</p>
+            </div>
+            <a href="mailto:careers@midmach.com?subject=General%20Application" class="btn btn-dark">Send Your Resume &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="section-dark cta-section">
+    <div class="container reveal">
+        <span class="section-label">Apply Today</span>
+        <h2 class="section-heading">Ready to Build Something Great?</h2>
+        <div class="section-accent" style="margin:16px auto 24px;"></div>
+        <p class="section-desc" style="margin:0 auto 40px;">Join a team with over 60 years of manufacturing excellence. Competitive pay, full benefits, and a career you can be proud of.</p>
+        <div class="cta-actions">
+            <a href="mailto:careers@midmach.com" class="btn btn-primary">Email Your Resume &rarr;</a>
+            <a href="tel:7015550100" class="btn btn-outline">Call (701) 555-0100</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <span class="nav-wordmark" style="font-size:1.4rem;">MIDMACH</span>
+            <p>Precision manufacturing for defense, aerospace, and industrial applications. Over 60 years of experience delivering quality solutions.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Services</h4>
+            <a href="services-cnc.html">CNC Machining</a>
+            <a href="services-laser.html">Laser Cutting</a>
+            <a href="services-welding.html">Robotic Welding</a>
+            <a href="services-fabrication.html">Metal Fabrication</a>
+        </div>
+        <div class="footer-col">
+            <h4>Company</h4>
+            <a href="about.html">About Us</a>
+            <a href="quality.html">Quality</a>
+            <a href="employment.html">Careers</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+            <h4>More</h4>
+            <a href="products.html">Products</a>
+            <a href="configurator.html">Configurator</a>
+            <a href="merch.html">Merchandise</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 MidMach. All rights reserved.</span>
+        <span>Formerly Midwestern Machine</span>
+    </div>
+</footer>
+
+<script>
+function toggleMobile() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+    document.querySelector('.hamburger').classList.toggle('active');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+}
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
